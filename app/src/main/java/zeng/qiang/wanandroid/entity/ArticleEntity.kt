@@ -1,5 +1,8 @@
 package zeng.qiang.wanandroid.entity
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ArticleEntity(
     val curPage: Int,
     val datas: List<DataX>,
@@ -9,7 +12,7 @@ data class ArticleEntity(
     val size: Int,
     val total: Int
 )
-
+@Serializable
 data class DataX(
     val apkLink: String,
     val audit: Int,
@@ -45,6 +48,7 @@ data class DataX(
     val visible: Int,
     val zan: Int
 )
+@Serializable
 
 data class Tag(
     val name: String,
