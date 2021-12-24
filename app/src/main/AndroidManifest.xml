@@ -14,7 +14,7 @@
         android:theme="@style/Theme.WanAndroid"
         tools:targetApi="m">
         <activity
-            android:name=".ui.page.MainActivity"
+            android:name=".ui.page.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.WanAndroid.NoActionBar">

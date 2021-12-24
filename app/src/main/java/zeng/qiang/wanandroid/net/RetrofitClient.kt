@@ -22,7 +22,7 @@ object RetrofitClient {
         .Builder()
         .addInterceptor(
             HttpLoggingInterceptor()
-                .setLevel(HttpLoggingInterceptor.Level.BASIC)
+                .setLevel(HttpLoggingInterceptor.Level.BODY)
         )
         .writeTimeout(15, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)

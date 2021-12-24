@@ -1,4 +1,4 @@
-package zeng.qiang.wanandroid.ui.page
+package zeng.qiang.wanandroid.ui.page.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

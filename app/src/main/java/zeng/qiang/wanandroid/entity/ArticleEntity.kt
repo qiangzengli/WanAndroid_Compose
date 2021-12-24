@@ -37,7 +37,8 @@ data class ArticleEntity(
     val userId: Int,
     val visible: Int,
     val zan: Int
-)
+) : java.io.Serializable
+
 @Serializable
 
 data class Tag(
