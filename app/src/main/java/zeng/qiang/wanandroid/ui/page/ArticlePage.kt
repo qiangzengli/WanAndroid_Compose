@@ -1,10 +1,8 @@
 package zeng.qiang.wanandroid.ui.page
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Card
 import androidx.compose.material.Text
@@ -13,7 +11,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberImagePainter
 import kotlinx.serialization.ExperimentalSerializationApi
+import zeng.qiang.wanandroid.entity.ArticleEntity
 import zeng.qiang.wanandroid.ui.theme.Pink
 
 @ExperimentalSerializationApi
@@ -26,7 +26,7 @@ fun ArticlePage(vm: MainViewModel = viewModel()) {
     LazyColumn {
         dataList.map {
             item {
-                ArticleItem(name = it.title)
+                ArticleItem(it)
             }
         }
 
@@ -36,7 +36,7 @@ fun ArticlePage(vm: MainViewModel = viewModel()) {
 
 
 @Composable
-fun ArticleItem(name: String) {
+fun ArticleItem(articleEntity: ArticleEntity) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -47,10 +47,21 @@ fun ArticleItem(name: String) {
         elevation = 0.dp,
         backgroundColor = Pink,
     ) {
-        Text(
-            text = "Hello ${name}!",
-            modifier = Modifier.padding(10.dp),
-        )
+        Row {
+            // Basic
+            Image(
+                painter = rememberImagePainter(articleEntity.envelopePic),
+                contentDescription = null,
+                modifier = Modifier.size(100.dp)
+            )
+            Text(
+                text = articleEntity.title,
+                modifier = Modifier
+                    .padding(10.dp)
+                    .weight(1f),
+            )
+        }
+
     }
 
 }

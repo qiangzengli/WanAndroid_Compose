@@ -4,9 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Article
 import androidx.compose.material.icons.outlined.Home
@@ -44,49 +47,63 @@ class MainActivity : ComponentActivity() {
             //主题
             WanAndroidTheme {
                 //Material 脚手架
-                Scaffold(topBar = {
-                    TopAppBar {
-                        Text(text = menuTitles[selectedItem.value])
-                    }
-                }, bottomBar = {
-                    BottomNavigation(
-                        elevation = 5.dp,
-                        modifier = Modifier.clip(
-                            shape = RoundedCornerShape(10.dp)
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = { Text(text = menuTitles[selectedItem.value]) },
+                            navigationIcon = {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowBack,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(30.dp)
+                                        .clickable {
+
+                                        }
+                                )
+
+                            }
                         )
-                    ) {
-                        items.forEachIndexed { index, s ->
-                            BottomNavigationItem(
-                                selected = selectedItem.value == index,
-                                alwaysShowLabel = true,
-                                label = { Text(text = menuTitles[index]) },
-                                onClick = {
-                                    selectedItem.value = index
-                                    navControllers.navigate(s.route) {
-                                        popUpTo(navControllers.graph.startDestinationId)
-                                        launchSingleTop = true
-                                    }
-                                },
-                                icon = {
-                                    Icon(
-                                        imageVector = menuIcons[index],
-                                        contentDescription = menuTitles[index]
-                                    )
-                                })
+                    },
+                    bottomBar = {
+                        BottomNavigation(
+                            elevation = 5.dp,
+                            modifier = Modifier.clip(
+                                shape = RoundedCornerShape(10.dp)
+                            )
+                        ) {
+                            items.forEachIndexed { index, s ->
+                                BottomNavigationItem(
+                                    selected = selectedItem.value == index,
+                                    alwaysShowLabel = true,
+                                    label = { Text(text = menuTitles[index]) },
+                                    onClick = {
+                                        selectedItem.value = index
+                                        navControllers.navigate(s.route) {
+                                            popUpTo(navControllers.graph.startDestinationId)
+                                            launchSingleTop = true
+                                        }
+                                    },
+                                    icon = {
+                                        Icon(
+                                            imageVector = menuIcons[index],
+                                            contentDescription = menuTitles[index]
+                                        )
+                                    })
+                            }
+                        }
+                    },
+                    content = {
+                        NavHost(
+                            navController = navControllers,
+                            startDestination = Screen.Home.route,
+                        ) {
+                            composable(Screen.Home.route) { MinePage() }
+                            composable(Screen.Article.route) { ArticlePage() }
+                            composable(Screen.Mine.route) { MinePage() }
                         }
                     }
-                }, content = {
-                    NavHost(
-                        navController = navControllers,
-                        startDestination = Screen.Home.route,
-                    ) {
-                        composable(Screen.Home.route) {
-                            ArticlePage()
-                        }
-                        composable(Screen.Article.route) { MinePage() }
-                        composable(Screen.Mine.route) { MinePage() }
-                    }
-                })
+                )
 
             }
         }
