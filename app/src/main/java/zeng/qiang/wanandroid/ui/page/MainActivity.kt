@@ -3,61 +3,110 @@ package zeng.qiang.wanandroid.ui.page
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Article
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import kotlinx.serialization.ExperimentalSerializationApi
 import zeng.qiang.wanandroid.ui.theme.WanAndroidTheme
 
+val menuTitles = arrayListOf("首页", "文章", "我的")
+val menuIcons = arrayListOf(
+    Icons.Outlined.Home,
+    Icons.Outlined.Article,
+    Icons.Outlined.AccountCircle,
+)
+
 @ExperimentalSerializationApi
+@ExperimentalFoundationApi
 class MainActivity : ComponentActivity() {
-    private val model: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycleScope.launchWhenResumed {
-
-            model.initData()
-
-        }
         setContent {
+            // 记录当前选中的位置索引
+            val selectedItem = remember {
+                mutableStateOf(0)
+            }
+            // 导航控制器
+            val navControllers = rememberNavController()
+            //主题
             WanAndroidTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    Greeting()
-                }
+                //Material 脚手架
+                Scaffold(topBar = {
+                    TopAppBar {
+                        Text(text = menuTitles[selectedItem.value])
+                    }
+                }, bottomBar = {
+                    BottomNavigation(
+                        elevation = 5.dp,
+                        modifier = Modifier.clip(
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                    ) {
+                        items.forEachIndexed { index, s ->
+                            BottomNavigationItem(
+                                selected = selectedItem.value == index,
+                                alwaysShowLabel = true,
+                                label = { Text(text = menuTitles[index]) },
+                                onClick = {
+                                    selectedItem.value = index
+                                    navControllers.navigate(s.route) {
+                                        popUpTo(navControllers.graph.startDestinationId)
+                                        launchSingleTop = true
+                                    }
+                                },
+                                icon = {
+                                    Icon(
+                                        imageVector = menuIcons[index],
+                                        contentDescription = menuTitles[index]
+                                    )
+                                })
+                        }
+                    }
+                }, content = {
+                    NavHost(
+                        navController = navControllers,
+                        startDestination = Screen.Home.route,
+                    ) {
+                        composable(Screen.Home.route) {
+                            ArticlePage()
+                        }
+                        composable(Screen.Article.route) { MinePage() }
+                        composable(Screen.Mine.route) { MinePage() }
+                    }
+                })
+
             }
         }
     }
 }
 
-@Composable
-fun Greeting(vm: MainViewModel = viewModel()) {
-    val data = vm.liveData.observeAsState()
-    val dataList = data.value?.datas ?: arrayListOf()
-    LazyColumn {
-        item {
-            dataList.map { ArticleItem(name = it.desc) }
-        }
-
-    }
+/**
+ * 使用密封类 减少Page创建
+ */
+sealed class Screen(
+    val route: String,
+) {
+    object Home : Screen("home")
+    object Article : Screen("article")
+    object Mine : Screen("mine")
 }
 
-@Composable
-fun ArticleItem(name: String) {
-    Text(text = "Hello ${name}!")
-}
+val items = listOf(
+    Screen.Home,
+    Screen.Article,
+    Screen.Mine,
+)
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    WanAndroidTheme {
-        Greeting()
-    }
-}

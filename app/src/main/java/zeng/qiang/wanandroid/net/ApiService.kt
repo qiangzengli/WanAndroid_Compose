@@ -4,6 +4,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import zeng.qiang.wanandroid.entity.ArticleEntity
 import zeng.qiang.wanandroid.entity.BaseEntity
+import zeng.qiang.wanandroid.entity.PageEntity
 
 interface ApiService {
     companion object {
@@ -11,6 +12,6 @@ interface ApiService {
     }
 
     @GET("article/list/{index}/json")
-    suspend fun getWxArticle(@Path("index") index: Int): BaseEntity<ArticleEntity>
+    suspend fun getWxArticle(@Path("index") index: Int): BaseEntity<PageEntity<ArticleEntity>>
 
 }

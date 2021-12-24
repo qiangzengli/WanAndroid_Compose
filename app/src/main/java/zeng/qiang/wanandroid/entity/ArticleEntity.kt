@@ -4,16 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ArticleEntity(
-    val curPage: Int,
-    val datas: List<DataX>,
-    val offset: Int,
-    val over: Boolean,
-    val pageCount: Int,
-    val size: Int,
-    val total: Int
-)
-@Serializable
-data class DataX(
     val apkLink: String,
     val audit: Int,
     val author: String,

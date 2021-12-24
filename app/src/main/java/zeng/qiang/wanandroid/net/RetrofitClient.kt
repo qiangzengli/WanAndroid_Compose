@@ -12,9 +12,9 @@ import java.util.concurrent.TimeUnit
 private val json = Json {
     ignoreUnknownKeys = true
 }
-
 @ExperimentalSerializationApi
 val api: ApiService = RetrofitClient.retrofit.create(ApiService::class.java)
+
 
 object RetrofitClient {
 
